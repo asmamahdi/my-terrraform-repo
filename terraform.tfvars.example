@@ -1,0 +1,50 @@
+# AWS Practice Environment - Terraform Variables Example
+# Owner: Touqeer Hussain
+# Copy this file to terraform.tfvars and update with your actual values
+
+# General Configuration
+aws_region   = "eu-west-2"
+environment  = "dev"
+project_name = "AWS Practice Environment"
+owner        = "Touqeer Hussain"
+
+# Network Configuration
+vpc_cidr                   = "10.0.0.0/16"
+public_subnet_cidrs        = ["10.0.0.0/24", "10.0.1.0/24"]
+private_app_subnet_cidrs   = ["10.0.10.0/24", "10.0.11.0/24"]
+private_db_subnet_cidrs    = ["10.0.20.0/24", "10.0.21.0/24"]
+
+# Security Configuration
+your_ip = "YOUR_PUBLIC_IP/32"  # Replace with your actual public IP
+
+# EC2 Configuration
+instance_type      = "t3.micro"
+min_size          = 1
+max_size          = 3
+desired_capacity  = 2
+
+# RDS Configuration
+db_engine                = "mysql"
+db_engine_version        = "8.0"
+db_instance_class        = "db.t3.micro"
+db_allocated_storage     = 20
+db_name                  = "practicedb"
+db_username              = "admin"
+db_password              = "maf141259"  # Change this to a secure password
+backup_retention_period  = 7
+
+# S3 Configuration (must be globally unique)
+assets_bucket_name    = "dev-app-assets-touqeer-practice-12345"
+logs_bucket_name      = "dev-app-logs-touqeer-practice-12345"
+log_expiration_days   = 30
+
+# CodeCommit Configuration
+repository_name        = "dev-practice-app"
+repository_description = "Practice application repository for AWS learning"
+
+# CloudWatch Configuration
+cpu_alarm_threshold    = 80
+memory_alarm_threshold = 70
+
+# Key Pair Configuration
+key_pair_name = "dev-practice-keypair"
