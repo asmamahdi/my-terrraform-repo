@@ -1,0 +1,82 @@
+version: 0.2
+
+# AWS CodeBuild Build Specification
+# Owner: Touqeer Hussain
+# This buildspec file is used by CodeBuild to build and package the web application
+
+env:
+  variables:
+    # Environment variables
+    NODE_ENV: "production"
+  parameter-store:
+    # Add any sensitive parameters from Parameter Store here
+    # DB_PASSWORD: "/dev/rds/password"
+
+phases:
+  install:
+    runtime-versions:
+      php: 8.0
+      nodejs: 16
+    commands:
+      - echo "Installing dependencies..."
+      - yum update -y
+      - yum install -y zip unzip
+      
+  pre_build:
+    commands:
+      - echo "Pre-build phase started on `date`"
+      - echo "Checking AWS CLI version..."
+      - aws --version
+      - echo "Logging in to Amazon ECR..."
+      # Add ECR login if using Docker images
+      # - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      
+  build:
+    commands:
+      - echo "Build phase started on `date`"
+      - echo "Building the application..."
+      
+      # Install PHP dependencies if using Composer
+      # - composer install --no-dev --optimize-autoloader
+      
+      # Install Node.js dependencies if needed
+      # - npm install
+      # - npm run build
+      
+      # Run tests
+      # - npm test
+      # - php vendor/bin/phpunit
+      
+      # Build static assets
+      - echo "Copying application files..."
+      - mkdir -p build/
+      - cp -r * build/ || true
+      - ls -la build/
+      
+  post_build:
+    commands:
+      - echo "Post-build phase started on `date`"
+      - echo "Build completed successfully"
+      
+      # Upload assets to S3 if needed
+      - echo "Uploading static assets to S3..."
+      - aws s3 sync build/assets/ s3://$S3_BUCKET/assets/ --delete || echo "No assets directory found"
+      
+      # Create deployment package
+      - echo "Creating deployment package..."
+      - cd build
+      - zip -r ../application.zip . -x "*.git*" "node_modules/*" "tests/*" "*.md"
+      - cd ..
+      - ls -la application.zip
+
+artifacts:
+  files:
+    - application.zip
+    - appspec.yml
+    - scripts/**/*
+  name: WebApplicationBuild
+  
+cache:
+  paths:
+    - '/root/.composer/cache/**/*'
+    - 'node_modules/**/*'
