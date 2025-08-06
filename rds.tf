@@ -89,7 +89,7 @@ resource "aws_db_instance" "practice_db" {
   monitoring_role_arn = aws_iam_role.rds_enhanced_monitoring.arn
 
   # Performance Insights
-  performance_insights_enabled = true
+  performance_insights_enabled = false
   performance_insights_retention_period = 7
 
   # Logging
