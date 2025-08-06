@@ -3,7 +3,7 @@
 
 # CloudWatch Log Group for Application Logs
 resource "aws_cloudwatch_log_group" "app_logs" {
-  name              = "/aws/ec2/${var.environment}-web-app"
+  name              = "/aws/ec2/${var.environment}-web-app2"
   retention_in_days = 14
 
   tags = {
