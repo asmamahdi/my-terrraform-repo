@@ -48,6 +48,7 @@ resource "aws_db_parameter_group" "db_parameter_group" {
 
 # RDS MySQL Instance
 resource "aws_db_instance" "practice_db" {
+ parameter_group_name = aws_db_parameter_group.db_parameter_group.name
   identifier = "${var.environment}-rds-mysql"
 
   # Engine Configuration
