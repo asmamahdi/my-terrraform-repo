@@ -12,6 +12,17 @@ resource "aws_cloudwatch_log_group" "app_logs" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
+  name              = "/aws/vpc/flowlogs/dev"
+  retention_in_days = 30
+
+  tags = {
+    Name        = "${var.environment}-vpc-flowlogs"
+    Environment = var.environment
+  }
+}
+
+
 # CloudWatch Log Group for VPC Flow Logs
 resource "aws_cloudwatch_log_group" "vpc_flow_logs2" {
   name              = "/aws/vpc/flowlogs2/${var.environment}"
