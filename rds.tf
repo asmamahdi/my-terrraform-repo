@@ -21,6 +21,17 @@ resource "aws_db_parameter_group" "db_parameter_group" {
     value = "{DBInstanceClassMemory*3/4}"
   }
 
+parameter {
+  name  = "character_set_server"
+  value = "utf8"
+}
+
+parameter {
+  name  = "collation_server"
+  value = "utf8_general_ci"
+}
+
+
   parameter {
     name  = "slow_query_log"
     value = "1"
