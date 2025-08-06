@@ -13,12 +13,12 @@ resource "aws_cloudwatch_log_group" "app_logs" {
 }
 
 # CloudWatch Log Group for VPC Flow Logs
-resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
-  name              = "/aws/vpc/flowlogs/${var.environment}"
+resource "aws_cloudwatch_log_group" "vpc_flow_logs2" {
+  name              = "/aws/vpc/flowlogs2/${var.environment}"
   retention_in_days = 14
 
   tags = {
-    Name        = "${var.environment}-vpc-flow-logs"
+    Name        = "${var.environment}-vpc-flow-logs2"
     Environment = var.environment
   }
 }
