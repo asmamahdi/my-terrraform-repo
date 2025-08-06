@@ -21,16 +21,15 @@ resource "aws_db_parameter_group" "db_parameter_group" {
     value = "{DBInstanceClassMemory*3/4}"
   }
 
-parameter {
-  name  = "character_set_server"
-  value = "utf8"
-}
+  parameter {
+    name  = "character_set_server"
+    value = "utf8"
+  }
 
-parameter {
-  name  = "collation_server"
-  value = "utf8_general_ci"
-}
-
+  parameter {
+    name  = "collation_server"
+    value = "utf8_general_ci"
+  }
 
   parameter {
     name  = "slow_query_log"
@@ -78,8 +77,8 @@ resource "aws_db_instance" "practice_db" {
 
   # Backup Configuration
   backup_retention_period = var.backup_retention_period
-  backup_window          = "03:00-04:00"  # UTC
-  maintenance_window     = "sun:04:00-sun:05:00"  # UTC
+  backup_window           = "03:00-04:00"  # UTC
+  maintenance_window      = "sun:04:00-sun:05:00"  # UTC
 
   # Parameter and Option Groups
   parameter_group_name = aws_db_parameter_group.db_parameter_group.name
@@ -90,17 +89,15 @@ resource "aws_db_instance" "practice_db" {
 
   # Performance Insights
   performance_insights_enabled = false
-  performance_insights_retention_period = 7
+  # ❌ Remove this line — not allowed if insights are disabled
+  # performance_insights_retention_period = 7
 
   # Logging
-  enabled_cloudwatch_logs_exports = ["error", "general", "slowquery"]
+  enabled_cloudwatch_logs_exports = ["error", "general", "slowquery"]  # ✅ spelling is correct
 
   # Deletion Protection
-  deletion_protection = false  # Set to true for production
-  skip_final_snapshot = true   # Set to false for production
-
-  # Final snapshot identifier (uncomment for production)
-  # final_snapshot_identifier = "${var.environment}-rds-mysql-final-snapshot-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
+  deletion_protection = false
+  skip_final_snapshot = true
 
   tags = {
     Name = "${var.environment}-rds-mysql"
@@ -141,8 +138,8 @@ resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
 
 # CloudWatch Log Groups for RDS
 resource "aws_cloudwatch_log_group" "rds_logs" {
-  for_each = toset(["error", "general", "slow_query"])
-  
+  for_each = toset(["error", "general", "slowquery"])  # ✅ corrected from "slow_query"
+
   name              = "/aws/rds/instance/${var.environment}-rds-mysql/${each.key}"
   retention_in_days = 7
 
@@ -151,24 +148,22 @@ resource "aws_cloudwatch_log_group" "rds_logs" {
   }
 }
 
-# RDS Read Replica (optional - uncomment if needed)
+# RDS Read Replica (Optional)
 /*
 resource "aws_db_instance" "practice_db_replica" {
   identifier = "${var.environment}-rds-mysql-replica"
-  
+
   replicate_source_db = aws_db_instance.practice_db.identifier
   instance_class      = var.db_instance_class
-  
+
   publicly_accessible = false
-  
-  # Monitoring
+
   monitoring_interval = 60
   monitoring_role_arn = aws_iam_role.rds_enhanced_monitoring.arn
-  
-  # Performance Insights
+
   performance_insights_enabled = true
   performance_insights_retention_period = 7
-  
+
   tags = {
     Name = "${var.environment}-rds-mysql-replica"
   }
