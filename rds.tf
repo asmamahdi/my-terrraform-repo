@@ -93,7 +93,7 @@ resource "aws_db_instance" "practice_db" {
   performance_insights_retention_period = 7
 
   # Logging
-  enabled_cloudwatch_logs_exports = ["error", "general", "slow_query"]
+  enabled_cloudwatch_logs_exports = ["error", "general", "slowquery"]
 
   # Deletion Protection
   deletion_protection = false  # Set to true for production
